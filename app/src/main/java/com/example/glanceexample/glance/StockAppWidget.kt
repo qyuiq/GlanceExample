@@ -6,12 +6,14 @@ import androidx.glance.text.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
@@ -32,6 +34,13 @@ import kotlin.time.Duration.Companion.seconds
 class StockAppWidget : GlanceAppWidget() {
 
     private var job: Job? = null
+    companion object {
+        private val smallMode = DpSize(100.dp, 80.dp)
+        private val mediumMode = DpSize(120.dp, 120.dp)
+    }
+    override val sizeMode: SizeMode = SizeMode.Responsive(
+        setOf(smallMode, mediumMode)
+    )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
@@ -84,13 +93,6 @@ class StockAppWidget : GlanceAppWidget() {
     fun GlanceContent() {
         val stateCount by PriceDataRepo.currentPrice.collectAsState()
         Small(stateCount)
-        Column(modifier = GlanceModifier
-            .fillMaxSize()
-            .background(GlanceTheme.colors.background)
-            .padding(8.dp)
-        ) {
-            Text("Demo")
-        }
     }
 
     @Composable
